@@ -1,6 +1,6 @@
 # Unit tests
 
-This area contains unit tests for generativepy.
+This area contains unit tests for pysequencer.
 
 These tests use the standard Python unittest module.
 
