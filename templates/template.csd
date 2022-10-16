@@ -1,6 +1,6 @@
 <CsoundSynthesizer>
 <CsOptions>
--odac
+-o ../scratch/test.wav
 </CsOptions>
 <CsInstruments>
 sr = 44100
@@ -18,9 +18,7 @@ endin
 <CsScore>
 ; sine wave.
 f 1 0 32768 10 1
-
-i 1 0 1 440 1
-i 1 1 1 880 1
+{{score}}
 e
 </CsScore>
 </CsoundSynthesizer>

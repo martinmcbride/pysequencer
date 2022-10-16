@@ -1,7 +1,15 @@
 import os
 from csoundwriter import create_csd
+from instrument import Instrument
+from sequence import Sequence
 
-create_csd('test.csd')
-os.system('csound test.csd')
-os.system('aplay test.wav')
+instrument = Instrument()
+seq = Sequence(instrument)
+
+seq.add_event(1, 2, 3)
+seq.add_event(2, 2, 3)
+
+create_csd('../scratch/test.csd', [seq])
+os.system('csound ../scratch/test.csd')
+os.system('aplay ../scratch/test.wav')
 
