@@ -6,8 +6,8 @@ from sequence import Sequence
 instrument = Instrument()
 seq = Sequence(instrument)
 
-seq.add_event(1, 2, 3)
-seq.add_event(2, 2, 3)
+seq.add_event(0, 1, 200)
+seq.add_event(1, 1, 400)
 
 create_csd('../scratch/test.csd', [seq])
 os.system('csound ../scratch/test.csd')

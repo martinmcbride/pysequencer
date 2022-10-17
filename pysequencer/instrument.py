@@ -11,10 +11,17 @@ class Instrument:
     name = None
     id = None
     parameters = None
-    defaults = None
+    functions = None
+    template = None
 
     def __post_init__(self):
         self.name = "Default instrument"
         self.id = 1
-        self.parameters = ["time", "duration", "frequency"]
-        self.defaults = [0, 0, 0]
+        self.parameters = ["time", "duration", "midi"]
+
+class SineSynth(Instrument):
+
+    def __post_init__(self):
+        self.name = "Default instrument"
+        self.id = 1
+        self.parameters = ["time", "duration", "midi"]
