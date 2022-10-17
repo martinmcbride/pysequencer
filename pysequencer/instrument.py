@@ -5,6 +5,9 @@
 
 from dataclasses import dataclass
 
+from namestore import namestore
+
+
 @dataclass
 class Instrument:
 
@@ -16,12 +19,12 @@ class Instrument:
 
     def __post_init__(self):
         self.name = "Default instrument"
-        self.id = 1
+        self.id = namestore.get_instrument()
         self.parameters = ["time", "duration", "midi"]
 
 class SineSynth(Instrument):
 
     def __post_init__(self):
         self.name = "Default instrument"
-        self.id = 1
+        self.id = namestore.get_instrument()
         self.parameters = ["time", "duration", "midi"]

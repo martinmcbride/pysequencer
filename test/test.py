@@ -7,7 +7,7 @@ instrument = Instrument()
 seq = Sequence(instrument)
 
 seq.add_event(0, 1, 200)
-seq.add_event(1, 1, 400)
+seq.add_event(1, 1, 500)
 
 create_csd('../scratch/test.csd', [seq])
 os.system('csound ../scratch/test.csd')
