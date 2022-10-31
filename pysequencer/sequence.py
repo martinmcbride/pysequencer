@@ -7,12 +7,12 @@ class Sequence():
 
     def __init__(self, instrument):
         self.instrument = instrument
-        self.events = []
+        self._events = []
 
     def add_event(self, *args):
         if len(args) != len(self.instrument.parameters):
             raise ValueError(f"Number of arguments doesn't match number of parameters for {self.instrument.name}")
-        self.events.append([self.instrument.id] + list(args))
+        self._events.append([self.instrument.id] + list(args))
 
     @staticmethod
     def _event_to_str(event):
@@ -22,5 +22,6 @@ class Sequence():
     def __iter__(self):
         return iter(self.events)
 
-    def __str__(self):
-        return "\n".join(map(Sequence._event_to_str, self.events))
+    @property
+    def events(self):
+        return "\n".join(map(Sequence._event_to_str, self._events))

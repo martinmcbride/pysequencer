@@ -9,11 +9,11 @@ class NameStore:
         self.instrument = 0
         self.function = 0
 
-    def get_instrument(self):
+    def get_instrument_id(self):
         self.instrument += 1
         return self.instrument
 
-    def get_function(self):
+    def get_function_id(self):
         self.function += 1
         return self.function
 

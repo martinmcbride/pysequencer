@@ -11,9 +11,10 @@ class Instrument:
 
     def __init__(self):
         self._name = "Default instrument"
-        self._id = namestore.get_instrument()
+        self._id = namestore.get_instrument_id()
         self._parameters = ["time", "duration", "midi"]
         self._functions = []
+        self._function_ids = []
         self._template = ""
 
     @property
@@ -28,16 +29,17 @@ class Instrument:
     def name(self):
         return self._name
 
-    def __str__(self):
+    @property
+    def body(self):
         return pystache.render(self._template, dict(id=self._id))
 
 class SineSynth(Instrument):
 
     def __init__(self):
         self._name = "SineSynth"
-        self._id = namestore.get_instrument()
+        self._id = namestore.get_instrument_id()
         self._parameters = ["time", "duration", "midi", "volume"]
-        self._functions = []
+        self._functions = ["f {{id}} 0 32768 10 1 1 0 1"]
         self._template =\
 """instr {{id}}
 a1 oscil 1, p4, 1
