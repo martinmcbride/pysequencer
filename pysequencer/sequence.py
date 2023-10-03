@@ -2,6 +2,9 @@
 # Created: 2022-09-30
 # Copyright (C) 2022, Martin McBride
 # License: MIT
+from collections.abc import Iterable
+from itertools import zip_longest, islice, cycle
+
 
 class Sequence():
 
@@ -13,6 +16,18 @@ class Sequence():
         if len(args) != len(self.instrument.parameters):
             raise ValueError(f"Number of arguments doesn't match number of parameters for {self.instrument.name}")
         self._events.append([self.instrument.id] + list(args))
+
+    def add_events(self, *args):
+        print(args)
+        if len(args) != len(self.instrument.parameters):
+            raise ValueError(f"Number of arguments doesn't match number of parameters for {self.instrument.name}")
+        args_list = [a if isinstance(a, Iterable) else (a,) for a in args]
+        sequence_size = max(map(len, args_list))
+        print(sequence_size, args_list)
+        args_list = [islice(cycle(a), sequence_size) for a in args_list]
+        for a in zip_longest(*args_list):
+            print(a)
+            self.add_event(*a)
 
     @staticmethod
     def _event_to_str(event):

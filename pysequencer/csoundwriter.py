@@ -32,8 +32,8 @@ e
 """
 
 
-def create_csd(fname, sequences, instruments):
-    csound_script = pystache.render(template, dict(score=sequences, instruments=instruments, functions=[]))
+def create_csd(fname, sequences, instruments, functions):
+    csound_script = pystache.render(template, dict(score=sequences, instruments=instruments, functions=functions))
 
     with open(fname, 'w') as outfile:
         outfile.write(csound_script)

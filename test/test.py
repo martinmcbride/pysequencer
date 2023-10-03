@@ -6,10 +6,9 @@ from sequence import Sequence
 instrument = SineSynth()
 seq = Sequence(instrument)
 
-seq.add_event(0, 1, 200, 1)
-seq.add_event(1, 1, 500, 0.1)
+seq.add_events([0, 1, 2, 4, 5, 6], 1, [60, 62, 63], 1)
 
-create_csd('../scratch/test.csd', [seq.events], [instrument.body])
+create_csd('../scratch/test.csd', [seq.events], [instrument.body], [instrument.functions])
 os.system('csound ../scratch/test.csd')
 os.system('aplay ../scratch/test.wav')
 

@@ -30,6 +30,11 @@ class Instrument:
         return self._name
 
     @property
+    def functions(self):
+        function_strings = [pystache.render(s, dict(id=i)) for i, s in zip(self._function_ids, self._functions)]
+        return "\n".join(function_strings)
+
+    @property
     def body(self):
         return pystache.render(self._template, dict(id=self._id))
 
@@ -38,11 +43,13 @@ class SineSynth(Instrument):
     def __init__(self):
         self._name = "SineSynth"
         self._id = namestore.get_instrument_id()
-        self._parameters = ["time", "duration", "midi", "volume"]
-        self._functions = ["f {{id}} 0 32768 10 1 1 0 1"]
+        self._parameters = ("time", "duration", "midi", "volume")
+        self._functions = ["f {{id}} 0 32768 10 1"]
+        self._function_ids = [1]
         self._template =\
 """instr {{id}}
-a1 oscil 1, p4, 1
+kf mtof p4
+a1 oscil 1, kf, 1
 a3 adsr .1, .5, 0, 0
 a2 = a3 * a1
 out a2*p5
