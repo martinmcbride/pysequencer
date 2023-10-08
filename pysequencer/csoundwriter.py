@@ -7,7 +7,8 @@ import pystache
 
 template = """<CsoundSynthesizer>
 <CsOptions>
--o ../scratch/test.wav
+-t {{tempo}}
+-o {{sound_file}}
 </CsOptions>
 <CsInstruments>
 sr = 44100
@@ -32,8 +33,13 @@ e
 """
 
 
-def create_csd(fname, sequences, instruments, functions):
-    csound_script = pystache.render(template, dict(score=sequences, instruments=instruments, functions=functions))
+def create_csd(script_file, sequences, instruments, functions, tempo, sound_file):
+    csound_script = pystache.render(template, dict(score=sequences,
+                                                   instruments=instruments,
+                                                   functions=functions,
+                                                   tempo=tempo,
+                                                   sound_file=sound_file
+                                                   ))
 
-    with open(fname, 'w') as outfile:
+    with open(script_file, 'w') as outfile:
         outfile.write(csound_script)
