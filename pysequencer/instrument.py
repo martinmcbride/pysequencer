@@ -61,7 +61,7 @@ class SineSynth(Instrument):
     def __init__(self, *defs, **kwdefs):
         self._name = "SineSynth"
         self._id = namestore.get_instrument_id()
-        self._parameter_names = ("time", "duration", "freq", "volume")
+        self._parameter_names = ("time", "duration", "midi", "volume")
         self._initial_values = (0, 1, 440, 1)
         self._parameters = dict()
         self._update_defaults(self, *defs, **kwdefs)
@@ -71,6 +71,29 @@ class SineSynth(Instrument):
 """instr {{id}}
 kf mtof p4
 a1 oscil 1, kf, 1
+a3 adsr .1, .5, 0, 0
+a2 = a3 * a1
+out a2*p5
+endin
+"""
+
+class TriSynth(Instrument):
+
+    def __init__(self, *defs, **kwdefs):
+        self._name = "FMSynth"
+        self._id = namestore.get_instrument_id()
+        self._parameter_names = ("time", "duration", "midi", "volume")
+        self._initial_values = (0, 1, 440, 1)
+        self._parameters = dict()
+        self._update_defaults(self, *defs, **kwdefs)
+        self._functions = ("f {{id}} 0 32768 10 1",)
+        self._function_ids = (namestore.get_function_id(),)
+        self._template =\
+"""instr {{id}}
+kf mtof p4
+osc1 oscil 1, kf, 1
+osc2 oscil 1, kf*1.02, 1
+osc3 oscil 1, kf*0.98, 1
 a3 adsr .1, .5, 0, 0
 a2 = a3 * a1
 out a2*p5
