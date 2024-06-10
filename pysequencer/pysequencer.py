@@ -5,9 +5,9 @@
 
 class Instrument:
 
-    def __init__(self, **kwargs):
-        self._parameters = tuple(["start", "duration", "pitch"] + list(kwargs.keys()))
-        self._defaults = tuple([0, 1, 440] + list(kwargs.values()))
+    def __init__(self):
+        self._parameters = tuple(["time", "duration", "midi", "volume"])
+        self._defaults = tuple([0, 1, 1, 440])
 
     def play(self, channel, destination):
         pass
@@ -25,31 +25,50 @@ class Instrument:
         return ", ".join(params)
 
 
-class Channel:
+class Events:
 
-    def __init__(self, instrument):
+    def __init__(self, instrument, start_time):
         self._instrument = instrument
         self._defaults = list(instrument.defaults)
         self._parameters = dict(zip(self._instrument.parameters, range(len(self._instrument.parameters))))
+        self.start_time = start_time
         self._events = []
-
-    def add_event(self, start, duration, pitch=440, **kwargs):
-        event = list(self._defaults)
-        self._events.append(event)
 
     @property
     def instrument(self):
         return self._instrument
 
+    @property
+    def events(self):
+        return self._events
+
+    def add_events(self, events):
+        event = list(self._defaults)
+        self._events.extend(events.events)
+
+    def add_event(self, start, duration, midi=60, volume=1, **kwargs):
+        event = list(self._defaults)
+        event[0] += self.start_time
+        self._events.append(event)
+
+    def join(self, other):
+        return
+
+
+class Channel:
+
+    def __init__(self, instrument, events):
+        self._instrument = instrument
+        self._events = events
+
+    @property
+    def instrument(self):
+        return self._instrument
+
+    @property
+    def events(self):
+        return self._events
+
     def __str__(self):
-        events = [str(e) for e in self._events]
+        events = [str(e) for e in self._events.events]
         return "\r\n".join(events)
-
-class Player:
-
-    def __init__(self, channels, destination):
-        self.channels = channels
-        self.destination = destination
-
-    def play(self):
-        pass

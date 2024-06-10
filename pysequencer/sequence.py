@@ -17,11 +17,12 @@ class Sequence():
             raise ValueError(f"Number of arguments doesn't match number of parameters for {self.instrument.name}")
         self._events.append([self.instrument.id] + list(args))
 
-    def add_events(self, *args):
+    def add_events(self, start, *args):
         print(args)
         if len(args) != len(self.instrument.parameters):
             raise ValueError(f"Number of arguments doesn't match number of parameters for {self.instrument.name}")
         args_list = [a if isinstance(a, Iterable) else (a,) for a in args]
+        args_list[0] = [x + start for x in args_list[0]]
         sequence_size = max(map(len, args_list))
         print(sequence_size, args_list)
         args_list = [islice(cycle(a), sequence_size) for a in args_list]
