@@ -8,14 +8,13 @@ template = """<CsoundSynthesizer>
 <CsInstruments>
 sr = 44100
 ksmps = 32
-nchnls = 2
+nchnls = 1
 0dbfs  = 1
 {{#instruments}}
 {{.}}
 {{/instruments}}
 </CsInstruments>
 <CsScore>
-; sine wave.
 {{#functions}}
 {{.}}
 {{/functions}}

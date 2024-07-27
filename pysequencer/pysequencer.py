@@ -6,11 +6,8 @@
 class Instrument:
 
     def __init__(self):
-        self._parameters = tuple(["time", "duration", "midi", "volume"])
-        self._defaults = tuple([0, 1, 1, 440])
-
-    def play(self, channel, destination):
-        pass
+        self._parameters = tuple(["time", "duration", "volume", "midi"])
+        self._defaults = tuple([0, 1, 1, 60])
 
     @property
     def parameters(self):
@@ -46,16 +43,21 @@ class Events:
         event = list(self._defaults)
         self._events.extend(events.events)
 
-    def add_event(self, start, duration, midi=60, volume=1, **kwargs):
+    def add_event(self, start, duration, volume=None, midi=None, **kwargs):
         event = list(self._defaults)
-        event[0] += self.start_time
+        event[0] += start + self.start_time
+        event[1] = duration
+        if volume is not None:
+            event[2] = volume
+        if midi is not None:
+            event[3] = midi
         self._events.append(event)
 
     def join(self, other):
         return
 
 
-class Channel:
+class Track:
 
     def __init__(self, instrument, events):
         self._instrument = instrument
@@ -72,3 +74,12 @@ class Channel:
     def __str__(self):
         events = [str(e) for e in self._events.events]
         return "\r\n".join(events)
+
+
+class Writer:
+
+    def __init__(self, tracks):
+        self._tracks = tracks
+
+    def write(self, filename):
+        pass
