@@ -5,6 +5,8 @@
 from midiutil.MidiFile import MIDIFile
 from pysequencer import Instrument
 
+PIANO3 = 3
+BASS = 34
 
 class MidiInstrument(Instrument):
 

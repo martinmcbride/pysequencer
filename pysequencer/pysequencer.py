@@ -24,12 +24,15 @@ class Instrument:
 
 class Events:
 
-    def __init__(self, instrument, start_time):
+    def __init__(self, instrument):
         self._instrument = instrument
         self._defaults = list(instrument.defaults)
         self._parameters = dict(zip(self._instrument.parameters, range(len(self._instrument.parameters))))
-        self.start_time = start_time
+        self._offset_time = 0
         self._events = []
+
+    def time(self, new_time):
+        self._offset_time = new_time
 
     @property
     def instrument(self):
@@ -45,7 +48,7 @@ class Events:
 
     def add_event(self, start, duration, volume=None, midi=None, **kwargs):
         event = list(self._defaults)
-        event[0] += start + self.start_time
+        event[0] += start + self._offset_time
         event[1] = duration
         if volume is not None:
             event[2] = volume
