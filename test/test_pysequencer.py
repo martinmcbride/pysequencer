@@ -60,6 +60,34 @@ class TestEvents(unittest.TestCase):
             self.assertEqual(e.get_parameter("start"), start_values[i])
             self.assertEqual(e.get_parameter("vibrato"), vibrato_values[i])
 
+    def test_add_event_lists(self):
+        instrument1 = AbstractInstrument(vibrato=3)
+        events1 = Events()
+        events1.add(Event(instrument1, start=1))
+        events1.add(Event(instrument1, start=2, vibrato=5))
+        instrument2 = AbstractInstrument(echo=4)
+        events2 = Events()
+        events2.add(Event(instrument2, start=1))
+        events2.add(Event(instrument2, start=2, echo=6))
+
+        events = Events()
+        events.add(events1)
+        events.add(events2)
+
+        self.assertEqual(len(events), 4)
+
+        start_values = [1, 2, 1, 2]
+        vibrato_values = [3, 5, 0, 0]
+        instrument_values = [instrument1, instrument1, instrument2, instrument2]
+        echo_values = [0, 0, 4, 6]
+        for i, e in enumerate(events):
+            self.assertEqual(e.instrument, instrument_values[i])
+            self.assertEqual(e.get_parameter("start"), start_values[i])
+            if e.instrument is instrument1:
+                self.assertEqual(e.get_parameter("vibrato"), vibrato_values[i])
+            if e.instrument is instrument2:
+                self.assertEqual(e.get_parameter("echo"), echo_values[i])
+
 
 
 if __name__ == '__main__':
