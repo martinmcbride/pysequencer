@@ -16,26 +16,44 @@ class AbstractInstrument:
             extras: Additional parameters and defaults, as tuples (name, default) where
                     name is the name as a string and default is the default value
         """
-        _common_parameters = (("time", 0), ("duration", 1), ("volume", 1), ("frequency", 440))
-        _extras = tuple(extras)
-        all_params = _common_parameters + _extras
-        self._parameters = tuple((x[0] for x in all_params))
+        common_parameters = (("start", 0), ("duration", 1), ("amplitude", 1), ("frequency", 440))
+        extras = tuple(extras)
+        all_params = common_parameters + extras
+        self._arguments = tuple((x[0] for x in all_params))
         self._defaults = {x[0]: x[1] for x in all_params}
-        print(self._parameters)
-        print(self._defaults)
 
     @property
-    def parameters(self):
-        return self._parameters
+    def arguments(self):
+        return self._arguments
 
     @property
     def defaults(self):
         return self._defaults
 
+    def default(self, param):
+        return self._defaults[param]
+
     def __str__(self):
-        params = (f"{p}={self._defaults[p]}" for p in self._parameters)
+        params = (f"{p}={self._defaults[p]}" for p in self._arguments)
         param_list = ", ".join(params)
         return f"AbstractInstrument({param_list})"
+
+
+class Event:
+
+    def __init__(self, instrument, **extras):
+        self._instrument = instrument
+        self._parameters = dict(instrument.defaults)
+        for k, v in extras.items():
+            if k in self._parameters:
+                self._parameters[k] = v
+            else:
+                raise ValueError(f"Key {k} not valid for {instrument}")
+
+    def __str__(self):
+        params = (f"{p}={self._parameters[p]}" for p in self._parameters)
+        param_list = ", ".join(params)
+        return f"Event({self._instrument}, {param_list})"
 
 
 # class Events:
@@ -62,12 +80,12 @@ class AbstractInstrument:
 #         event = list(self._defaults)
 #         self._events.extend(events.events)
 #
-#     def add_event(self, start, duration, volume=None, midi=None, **kwargs):
+#     def add_event(self, start, duration, amplitude=None, midi=None, **kwargs):
 #         event = list(self._defaults)
 #         event[0] += start + self._offset_time
 #         event[1] = duration
-#         if volume is not None:
-#             event[2] = volume
+#         if amplitude is not None:
+#             event[2] = amplitude
 #         if midi is not None:
 #             event[3] = midi
 #         self._events.append(event)
