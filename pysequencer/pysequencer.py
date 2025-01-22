@@ -2,6 +2,8 @@
 # Created:24-06-07
 # Copyright (C) 2024, Martin McBride
 # License: MIT
+from typing import Union, Self
+
 
 class AbstractInstrument:
     """
@@ -13,27 +15,39 @@ class AbstractInstrument:
         Create AbstractInstrument
 
         Args:
-            extras: Additional parameters and defaults, as named parameters where the value specifies the default
+            extras: Additional parameters as keyword parameters, eg echo=0 creates a new instrument parameter called
+                    "echo" with default value 0
         """
         common_args = dict(start=0, duration=1, amplitude=1, frequency=440)
         self._arguments = common_args | extras
 
     @property
-    def arguments(self):
+    def arguments(self) -> dict:
+        """
+        Arguments property
+
+        Returns:
+            A dictionary listing each argument and its default value as key:value pairs.
+        """
         return self._arguments
 
-    def get_argument(self, argument):
-        return self._arguments[argument]
+    def get_argument(self, name: str) -> any:
+        if not isinstance(name, str):
+            raise TypeError("name must be a string")
+        return self._arguments[name]
 
-    def __str__(self):
-        params = (f"{p}={self._defaults[p]}" for p, v in self._arguments.items())
+    def __str__(self) -> str:
+        params = (f"{p}={self._arguments[p]}" for p, v in self._arguments.items())
         param_list = ", ".join(params)
         return f"AbstractInstrument({param_list})"
 
 
 class Event:
 
-    def __init__(self, instrument, **extras):
+    def __init__(self, instrument: AbstractInstrument, **extras):
+        if not isinstance(instrument, AbstractInstrument):
+            raise TypeError("instrument must be an AbstractInstrument")
+
         self._instrument = instrument
         self._parameters = dict(instrument.arguments)
         for k, v in extras.items():
@@ -51,11 +65,13 @@ class Event:
         return self._parameters
 
     def get_parameter(self, name):
+        if not isinstance(name, str):
+            raise TypeError("name must be a string")
         return self._parameters[name]
 
     def __str__(self):
-        params = (f"{p}={self._parameters[p]}" for p in self._parameters)
-        param_list = ", ".join(params)
+        params = (f"{p}={p}" for p in self._parameters)
+        param_list = ", ".join(list(params))
         return f"Event({self._instrument}, {param_list})"
 
 
@@ -64,13 +80,13 @@ class Events:
     def __init__(self):
         self._events = []
 
-    def add(self, items):
-        if isinstance(items, Event):
-            self._events.append(items)
-        elif isinstance(items, Events):
-            self._events.extend(items)
+    def add(self, item: Event | Self):
+        if isinstance(item, Event):
+            self._events.append(item)
+        elif isinstance(item, Events):
+            self._events.extend(item)
         else:
-            raise TypeError("Events.add require an Event ior Events object")
+            raise TypeError("item must be an Event or Events object")
 
     def __iter__(self):
         for e in self._events:
@@ -79,5 +95,12 @@ class Events:
     def __len__(self):
         return len(self._events)
 
+    def __str__(self) -> str:
+        return f"Events({len(self._events)} events)"
+
+
 def delay_events(events, delay):
-    pass
+    for e in events:
+        parameters = dict(e.parameters)
+        parameters["start"] = parameters["start"] + delay
+        yield Event(e.instrument, **parameters)
