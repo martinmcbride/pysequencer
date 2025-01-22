@@ -30,7 +30,7 @@ class TestEvent(unittest.TestCase):
     def test_str_event(self):
         instrument = AbstractInstrument(duration=2, amplitude=0.5, frequency=600, vibrato=5)
         event = Event(instrument)
-        self.assertEqual(str(event), "Event(AbstractInstrument(start=0, duration=2, amplitude=0.5, frequency=600, vibrato=5), start=start, duration=duration, amplitude=amplitude, frequency=frequency, vibrato=vibrato)")
+        self.assertEqual(str(event), "Event(AbstractInstrument(start=0, duration=2, amplitude=0.5, frequency=600, vibrato=5), start=0, duration=2, amplitude=0.5, frequency=600, vibrato=5)")
 
     def test_default_event(self):
         instrument = AbstractInstrument()
@@ -106,23 +106,19 @@ class TestEvents(unittest.TestCase):
             if e.instrument is instrument2:
                 self.assertEqual(e.get_parameter("echo"), echo_values[i])
 
-# class TestDelayEvents(unittest.TestCase):
-#
-#     def test_default_events(self):
-#         instrument = AbstractInstrument(vibrato=3)
-#         events = Events()
-#         events.add(Event(instrument, start=1))
-#         events.add(Event(instrument, start=2, vibrato=5))
-#         events.add(Event(instrument, start=10, vibrato=2))
-#         for e in events:
-#             print(type(e))
-#             print(id(e))
-#             print(Event(instrument, start=1))
-#
-#         # delayed = delay_events(events, 20)
-#         # for e in delayed:
-#         #     print(e)
-#         # self.assertEqual(len(events), 0)
+class TestDelayEvents(unittest.TestCase):
+
+    def test_default_events(self):
+        instrument = AbstractInstrument(vibrato=3)
+        events = Events()
+        events.add(Event(instrument, start=1))
+        events.add(Event(instrument, start=2, vibrato=5))
+        events.add(Event(instrument, start=10, vibrato=2))
+        delayed = list(delay_events(events, 20))
+        self.assertEqual(len(events), 3)
+        self.assertEqual(str(delayed[0]), "Event(AbstractInstrument(start=0, duration=1, amplitude=1, frequency=440, vibrato=3), start=21, duration=1, amplitude=1, frequency=440, vibrato=3)")
+        self.assertEqual(str(delayed[1]), "Event(AbstractInstrument(start=0, duration=1, amplitude=1, frequency=440, vibrato=3), start=22, duration=1, amplitude=1, frequency=440, vibrato=5)")
+        self.assertEqual(str(delayed[2]), "Event(AbstractInstrument(start=0, duration=1, amplitude=1, frequency=440, vibrato=3), start=30, duration=1, amplitude=1, frequency=440, vibrato=2)")
 
 
 

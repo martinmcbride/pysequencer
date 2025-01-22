@@ -2,6 +2,7 @@
 # Created:24-06-07
 # Copyright (C) 2024, Martin McBride
 # License: MIT
+from collections.abc import Iterable
 from typing import Union, Self
 
 
@@ -70,7 +71,7 @@ class Event:
         return self._parameters[name]
 
     def __str__(self):
-        params = (f"{p}={p}" for p in self._parameters)
+        params = (f"{p}={self._parameters[p]}" for p in self._parameters)
         param_list = ", ".join(list(params))
         return f"Event({self._instrument}, {param_list})"
 
@@ -99,7 +100,7 @@ class Events:
         return f"Events({len(self._events)} events)"
 
 
-def delay_events(events, delay):
+def delay_events(events: Iterable[Event], delay: float):
     for e in events:
         parameters = dict(e.parameters)
         parameters["start"] = parameters["start"] + delay
